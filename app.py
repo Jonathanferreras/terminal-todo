@@ -26,7 +26,7 @@ def read_storage():
                 file.write(storage_init)
                 print("Storage created!")
 
-        storage_file = open('data.json')
+        storage_file = open(STORAGE_LOCATION)
         storage_data = json.load(storage_file)   
 
         return storage_data  
