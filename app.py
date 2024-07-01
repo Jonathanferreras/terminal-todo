@@ -4,6 +4,12 @@ from pathlib import Path
 
 STORAGE_LOCATION = "storage.json"
 
+operations = {
+    "c": "create",
+    "u": "update",
+    "d": "delete"
+}
+
 def read_storage():
     print("Accessing storage...")
 
@@ -35,10 +41,44 @@ def read_storage():
         print("Error occurred while accessing storage!")
         return None
 
+def present_options(todos_length):
+    enabled_commands = []
+    commands = list(operations.keys())
+    statement = "What would you like to do? press "
 
+
+    for command in commands:
+        if command != "c" and todos_length == 0:
+            continue
+        else:
+            statement = statement + f"{command} ({operations[command]}) "
+            enabled_commands.append(command)
+
+    user_option = input(statement)
+
+    while user_option not in enabled_commands:
+        print("Invalid option, try again.")
+        user_option = present_options(todos_length)
+
+    return user_option
+
+    
 
 if __name__ == "__main__":
     print("Welcome to Terminal Todo!")
     storage_data = read_storage()
 
-    # TODO: apply crud operations next
+    if storage_data:
+        # logic here
+
+        # TODO: implement while loop to have repeatable action
+        todos_length = len(storage_data["todos"])
+        user_option = present_options(todos_length)
+
+        # TODO: perform action based on option chosen
+
+
+
+
+    else:
+        print("Unable to load data, exiting...")
