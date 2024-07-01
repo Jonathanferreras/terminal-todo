@@ -14,16 +14,16 @@ def read_storage():
             print("Storage file not found, initializing...")
             
             storage_init = json.dumps(
-                {
+                obj = {
                     "todos": [],
                     "date_created": datetime.now().strftime("%d/%m/%Y %H:%M:%S") 
                 },
-                indent=4,
-                default=str
+                indent = 4,
+                default = str
             )
 
-            with open(STORAGE_LOCATION, "w") as file:
-                file.write(storage_init)
+            with open(STORAGE_LOCATION, "w") as file_output:
+                file_output.write(storage_init)
                 print("Storage created!")
 
         storage_file = open(STORAGE_LOCATION)
