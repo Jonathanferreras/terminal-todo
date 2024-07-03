@@ -63,33 +63,36 @@ def write_storage(payload):
 
 def present_options(todos_length):
     try:
-        enabled_commands = []
-        commands = list(operations.keys())
-        statement = "What would you like to do?\n"
+        user_option = ""
+
+        while user_option != "x":
+            enabled_commands = []
+            commands = list(operations.keys())
+            statement = "What would you like to do?\n"
 
 
-        for command in commands:
-            if command != "c" and todos_length == 0:
-                continue
-            else:
-                statement = statement + f" {command} ({operations[command]})\n"
-                enabled_commands.append(command)
+            for command in commands:
+                if command != "c" and todos_length == 0:
+                    continue
+                else:
+                    statement = statement + f" {command} ({operations[command]})\n"
+                    enabled_commands.append(command)
 
-        statement = statement + "enter: "
-        user_option = input(statement)
+            statement = statement + "enter: "
+            user_option = input(statement)
 
-        while user_option not in enabled_commands:
-            print("Invalid option, try again.")
-            user_option = present_options(todos_length)
+            while user_option not in enabled_commands:
+                print("Invalid option, try again.")
+                user_option = present_options(todos_length)
 
-        if user_option == "c":
-            create_todo()
-        if user_option == "r":
-            read_todos()
-        if user_option == "d":
-            delete_todo(storage_data)
-        if user_option == "x":
-            print("Exiting...")
+            if user_option == "c":
+                create_todo()
+            if user_option == "r":
+                read_todos()
+            if user_option == "d":
+                delete_todo()
+            if user_option == "x":
+                print("Exiting...")
 
     except:
         print("Failed to present options!")
@@ -127,8 +130,9 @@ def read_todos():
     except:
         print("Failed to read todos!") 
 
-def delete_todo(storage_data):
+def delete_todo():
     try:
+        storage_data = read_storage()
         options = "Which todo to delete? (type index value) \n"
 
         for i, todo in enumerate(storage_data["todos"]):
