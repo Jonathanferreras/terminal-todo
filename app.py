@@ -61,7 +61,7 @@ def write_storage(payload):
     except:
         print("Failed to write to storage!")
 
-def present_options(todos_length):
+def present_options():
     try:
         user_option = ""
 
@@ -69,10 +69,11 @@ def present_options(todos_length):
             enabled_commands = []
             commands = list(operations.keys())
             statement = "What would you like to do?\n"
-
+            storage_data = read_storage()
+            todos_length = len(storage_data["todos"])
 
             for command in commands:
-                if command != "c" and todos_length == 0:
+                if command != "c" and command != "x" and todos_length == 0:
                     continue
                 else:
                     statement = statement + f" {command} ({operations[command]})\n"
@@ -118,8 +119,7 @@ def create_todo():
 
 def read_todos():
     try:
-        storage_file = open(STORAGE_LOCATION)
-        storage_data = json.load(storage_file)
+        storage_data = read_storage()
 
         if len(storage_data["todos"]) > 0:
             print("My todos:")
@@ -160,8 +160,7 @@ if __name__ == "__main__":
     storage_data = read_storage()
 
     if storage_data:
-        todos_length = len(storage_data["todos"])
-        present_options(todos_length)
+        present_options()
 
     else:
         print("Unable to load data, exiting...")
