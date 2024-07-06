@@ -4,7 +4,6 @@ from datetime import datetime
 from pathlib import Path
 
 STORAGE_LOCATION = "storage.json"
-
 operations = {
     "c": "create",
     "r": "read",
@@ -16,13 +15,12 @@ operations = {
 def initialize_storage():
     try:
         print("Initializing...")
-
         storage_init = {
             "todos": [],
             "date_created": datetime.now().strftime("%d/%m/%Y %H:%M:%S") 
         }
-
         write_storage(storage_init)
+        
     except:
         print("Failed to initialize storage!")
 
@@ -33,9 +31,7 @@ def read_storage():
 
         if not storage_location.is_file():
             print("Storage file not found!")
-            
             initialize_storage()
-
             print("Storage created!")
 
         storage_file = open(STORAGE_LOCATION)
@@ -90,6 +86,8 @@ def present_options():
                 create_todo()
             if user_option == "r":
                 read_todos()
+            if user_option == "u":
+                update_todo()
             if user_option == "d":
                 delete_todo()
             if user_option == "x":
@@ -130,6 +128,36 @@ def read_todos():
     except:
         print("Failed to read todos!") 
 
+def update_todo():
+    try:
+        storage_data = read_storage()
+        options = "Which todo to update? (type index value) \n"
+
+        for i, todo in enumerate(storage_data["todos"]):
+            options = options + f"{i+1}. {todo["content"]} \n"
+
+        options = options + "enter: "
+        user_option = int(input(options))
+        num_of_todos = len(storage_data["todos"])
+
+        while user_option > num_of_todos or user_option <= 0:
+            print("Invalid selection, try again!")
+            update_todo()
+        
+        selected_todo = storage_data["todos"][user_option - 1]
+
+        print("Selected todo: " + selected_todo["content"])
+
+        user_update = input("enter: ")
+        selected_todo["content"] = user_update
+        selected_todo["last_updated"] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+
+        write_storage(storage_data)
+        print("Updated!")
+
+    except:
+        print("Failed to update todo!")
+
 def delete_todo():
     try:
         storage_data = read_storage()
@@ -147,12 +175,12 @@ def delete_todo():
             delete_todo()
         
         deleted_todo = storage_data["todos"].pop(user_option - 1)
-        print("Deleting todo: " + deleted_todo["content"])
+
         write_storage(storage_data)
+        print("Deleted todo!: " + deleted_todo["content"])
 
     except:
         print("Failed to delete todo!")
-
 
 if __name__ == "__main__":
     print("Welcome to Terminal Todo!")
@@ -160,6 +188,5 @@ if __name__ == "__main__":
 
     if storage_data:
         present_options()
-
     else:
         print("Unable to load data, exiting...")
