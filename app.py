@@ -139,16 +139,15 @@ def delete_todo():
             options = options + f"{i+1}. {todo["content"]} \n"
         
         options = options + "enter: "
-        user_option = input(options)
+        user_option = int(input(options))
+        num_of_todos = len(storage_data["todos"])
 
-        #TODO: finish delete logic
-
-        while int(user_option) in range(0, len(storage_data["todos"])):
+        while user_option > num_of_todos or user_option <= 0:
             print("Invalid selection, try again!")
-            delete_todo(storage_data)
+            delete_todo()
         
-        storage_data["todos"].pop(user_option + 1)
-        
+        deleted_todo = storage_data["todos"].pop(user_option - 1)
+        print("Deleting todo: " + deleted_todo["content"])
         write_storage(storage_data)
 
     except:
